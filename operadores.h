@@ -3,11 +3,8 @@
 
 #include "genotipo.h"
 
-#define PROB_MUT   0.01
-#define PROB_CROSS 0.25
-
-void mutacion(poblacion pob);
-void crossover(poblacion pob);
+void mutacion(poblacion pob,double prob_mut);
+void crossover(poblacion pob,double prob_cross);
 void xover(gen *ind1, gen *ind2, poblacion pob);
 
 #endif

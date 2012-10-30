@@ -5,17 +5,19 @@
 #include "ag.h"
 #include "utilidades.h"
 
-void inicializar(poblacion *pob, variable **var)
+void inicializar(poblacion *pob, variable **var, char* instancia)
 {
 	int num_var;
 	int i,j,k;
 	double val;
 	variable *variables;
+	FILE *fichero;
 	
-	fscanf(stdin, "%d\n",&num_var);
-	pob->tam_poblacion=TAM_POBLACION;
+	fichero=fopen(instancia,"r");
+	
+	fscanf(fichero, "%d\n",&num_var);
 	pob->num_variables=num_var;
-	pob->individuos=malloc(sizeof(genotipo)*(TAM_POBLACION+1));
+	pob->individuos=malloc(sizeof(genotipo)*(pob->tam_poblacion+1));
 	
 	for(i=0;i<pob->tam_poblacion+1;i++)
 		pob->individuos[i].genes=malloc(sizeof(gen)*num_var);
@@ -23,7 +25,7 @@ void inicializar(poblacion *pob, variable **var)
 	
 	for(i=0;i<num_var;i++)
 	{
-		fscanf(stdin,"%lf %lf %d",&variables[i].low_bound,&variables[i].up_bound,&variables[i].p);
+		fscanf(fichero,"%lf %lf %d",&variables[i].low_bound,&variables[i].up_bound,&variables[i].p);
 		variables[i].p=(variables[i].up_bound-variables[i].low_bound)*pow(10,variables[i].p);
 		variables[i].p=ceil(log(variables[i].p)/log(2));
 		for(j=0;j<pob->tam_poblacion+1;j++)
@@ -59,7 +61,7 @@ void copiar_genes(gen *desde, gen *hacia, int total_genes)
 	}
 }
 
-void evaluar(poblacion pob,double(*f)(double*))
+void evaluar(poblacion pob,void *f,int n_var,char **var_names)
 {
 	int i,j;
 	double *vars;
@@ -68,7 +70,7 @@ void evaluar(poblacion pob,double(*f)(double*))
 	{
 		for(j=0;j<pob.num_variables;j++)
 			vars[j]=binary_gen_to_double(pob.individuos[i].genes[j]);
-		pob.individuos[i].fitness=f(vars);
+		pob.individuos[i].fitness=evaluator_evaluate(f,n_var,var_names,vars);
 	}
 	/*for(i=0;i<pob.tam_poblacion;i++)
 		printf("INDIVIDUO %d FITNESS: %f\n",i,pob.individuos[i].fitness);*/

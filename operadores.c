@@ -2,7 +2,7 @@
 #include "operadores.h"
 #include "utilidades.h"
 
-void mutacion(poblacion pob)
+void mutacion(poblacion pob,double prob_mut)
 {
 	int i,j,rand_pos1;
 	double rand_num;
@@ -13,7 +13,7 @@ void mutacion(poblacion pob)
 		{
 			//numero aleatoreo entre 0 y 1
 			rand_num=randval();
-			if(rand_num<PROB_MUT)
+			if(rand_num<prob_mut)
 			{
 				//numero aleatoreo entre 0 y num_var
 				rand_pos1=(int)randval_between(0.0,(double)pob.individuos[i].genes[j].var->p);
@@ -26,7 +26,7 @@ void mutacion(poblacion pob)
 	}
 }
 
-void crossover(poblacion pob)
+void crossover(poblacion pob,double prob_cross)
 {
 	int i,one,first=0;
 	double p;
@@ -34,7 +34,7 @@ void crossover(poblacion pob)
 	for(i=0;i<pob.tam_poblacion;i++)
 	{
 		p=randval();
-		if(p<PROB_CROSS)
+		if(p<prob_cross)
 		{
 			first++;
 			if(first%2==0)
